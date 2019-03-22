@@ -1,0 +1,32 @@
+Конфа начинается в 9.45
+Мой доклад 15.00 – 15.50
+
+Взять с собой ноут и переходник на HDMI
+
+На ноуте предварительно запустить:
+- презентацию
+- emacs
+- 4 терминала (разложить их на рабочем столе)
+- сайт raft с интерактивной схемой
+
+* план разработки
+
+** Makefile, запуск raft.erl, сборка кластера
+
+** gen_fsm, #state{}, init
+
+** broadcast, send_event, receive and io:format event in all states
+
+** follower: wait for timeout and start election
+
+** candidat: ask for votes
+
+** follower: vote
+
+** candidat: count votes
+
+** leader: broadcast append_log
+
+** follower: process append_log
+
+** candidat and leader: process vote_request and append_log
