@@ -7,7 +7,14 @@
 %% implement lists:any/2
 %% http://www.erlang.org/doc/man/lists.html#any-2
 any(Pred, List) ->
-    false.
+        case List of
+                [] -> false;
+                [Head | Tail] ->
+                    case Pred(Head) of
+                        true -> true;
+                        false -> any(Pred, Tail)
+                    end
+            end.
 
 
 any_test() ->
