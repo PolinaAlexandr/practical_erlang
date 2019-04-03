@@ -1,5 +1,5 @@
 -module(hard_one).
--export([list_users/0, group_by_gender/1, criteriafunc_age/1, criteriafunc_gender/1, group_by/2]).
+-export([list_users/0, group_by_gender_task1/1, criteriafunc_age/1, criteriafunc_gender/1, group_by/2]).
 
 
 list_users() ->
