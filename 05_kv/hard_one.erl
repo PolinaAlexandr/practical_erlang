@@ -45,10 +45,10 @@ criteriafunc_gender(User) ->
 group_by(CriteriaFun, Users) ->
         lists:foldl(
             fun(User, Acc) ->
-                Category = CriteriaFun(User),
-                case maps:find(Category, Acc) of 
-                    error -> maps:put(Category, [User], Acc);
-                    {ok,Values} -> maps:put(Category,[User | Values], Acc)
+                Critery = CriteriaFun(User),
+                case maps:find(Critery, Acc) of 
+                    error -> maps:put(Critery, [User], Acc);
+                    {ok,Values} -> maps:put(Critery,[User | Values], Acc)
                 end
             end,
             #{},
