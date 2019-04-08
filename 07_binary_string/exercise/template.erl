@@ -12,6 +12,10 @@ data() ->
 
 
 parse(Str, Data) when is_binary(Str) ->
-    maps:find(name, Data),
+    % maps:find(name, Data),
+    Splits1 = binary:split(Str, [<<"{{">>]),
+    Splits_2 = lists:maps(fun(Split) ->
+        
+
 
     Str.
