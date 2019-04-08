@@ -60,7 +60,12 @@ sample_champ() ->
 
 
 get_stat(Champ) ->
-    {0, 0, 0.0, 0.9}.
+        TeamsStat = lists:map(fun get_team_stat/1, Champ),
+        {TotalPlayers, TotalAge, TotalRating} =
+            lists:foldl(fun({TeamPlayers, TeamAge, TeamRating}, {P, A, R}) ->
+                                {P + TeamPlayers, A + TeamAge, R + TeamRating}
+                        end, {0, 0, 0}, TeamsStat),
+        {length(Champ), TotalPlayers, TotalAge / TotalPlayers, TotalRating / TotalPlayers}.
 
 
 get_stat_test() ->

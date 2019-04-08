@@ -37,6 +37,8 @@ init() ->
 
 
 add_idea(Id, Title, Author, Rating, Description) ->
+      New_great_idea = #idea{id = Id, title = Title, author = Author, rating = Rating, description = Description},
+      ets:insert(great_ideas_table, New_great_idea),
     ok.
 
 
