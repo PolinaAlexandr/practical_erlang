@@ -43,7 +43,12 @@ add_idea(Id, Title, Author, Rating, Description) ->
 
 
 get_idea(Id) ->
-    not_found.
+      ets:lookup_element(great_ideas_table, Id) == [New_great_idea],
+      ets:lookup_element(great_ideas_table, Id) == [],
+      if 
+            [New_great_idea] -> {ok, New_great_idea};
+            [] -> not_found
+      end.
 
 
 ideas_by_author(Author) ->
