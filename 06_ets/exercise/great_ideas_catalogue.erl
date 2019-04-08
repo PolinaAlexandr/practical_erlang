@@ -52,7 +52,7 @@ get_idea(Id) ->
 
 
 ideas_by_author(Author) ->
-    [].
+      ets:match_object(great_ideas_table, {'_', '_', Author, '_', '_'}).
 
 
 ideas_by_rating(Rating) ->
