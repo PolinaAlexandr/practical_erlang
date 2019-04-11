@@ -1,5 +1,5 @@
 -module(gs).
--export([start/0, add/3, remove/2, check/2, loop/1, stop/1]).
+-export([start/0, add/3, remove/2, check/2, call/3, stop/1, handle_call/3]).
 
 start() ->
     InitialState = #{},
@@ -37,27 +37,35 @@ stop(Pid) ->
         5000 -> {error, no_reply}
     end.
 
-loop(State) ->
-    io:format("V2, loop ~p~n", [self()]),
+call(ServerPid, Command, Payload)->
+    QueryRef = erlang:monitor(process, ServerPid),
+    ServerPid ! {Command, QueryRef, self(),Payload},
     receive
-            {add, ClientPid, {K, V}} ->
-            State2 = State#{K => V},
-            ClientPid ! {reply, ok},
-            ?MODULE:loop(State2);
-        {remove, ClientPid, K} ->
-            State2 = maps:remove(K, State),
-            ClientPid ! {reply, ok},
-            ?MODULE:loop(State2);
-        {check, ClientPid, K} ->
-            case maps:find(K, State) of 
-                {ok, V} ->  ClientPid !{reply, {ok, V}};
-                error -> ClientPid ! {reply, {error, not_found}}
-            end,
-            ?MODULE:loop(State);
-        stop ->
-            io:format("~p stops now ~n", [self()]),
-            ok; 
-            Msg ->
-                 io:format("~p got msg ~p~n", [self(), Msg]),
-                 ?MODULE:loop(State)
-        end.
+        {reply,QueryRef, Reply} -> Reply,
+            erlang:demonitor(QueryRef, [flush]),
+            Reply;
+        {'DOWN', QueryRef, process, ServerPid, Reason} ->
+            io:format("Server crashed with reason: ~p~n", [Reason]),
+            {error, Reason}
+
+    after
+        5000 ->
+            erlang:demonitor(QueryRef, [flush]),
+            {error, no_reply}
+    end.
+
+    handle_call(add, {K, V}, State) ->
+        State2 = State#{K => V},
+        {ok, State2};
+    handle_call(remove, K, State) ->
+        State2 = maps:remove(K, State),
+        {ok, State2};
+    handle_call(check, 42, State) ->
+        42/0,
+        {ok, State};
+    handle_call(check, K, State) ->
+        Reply = case maps:find(K, State) of
+            {ok, V} -> {ok, V};
+            error -> {error, not_found}
+        end,
+    {Reply, State}.
