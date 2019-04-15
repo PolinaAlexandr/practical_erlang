@@ -40,9 +40,9 @@ send_message(Server, RoomId, UserName, Message) ->
     call(Server, {send_message, RoomId, UserName, RoomId}).
 
 
-stop(Server) ->
-    Server ! stop.
-
-
 get_messages_history(Server, RoomId) ->
-    ok.
+    call(Server, {get_messages_history, RoomId}).
+
+
+stop(Server) ->
+        Server ! stop.
