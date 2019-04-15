@@ -3,39 +3,45 @@
 -export([start/0,
          create_room/2, remove_room/2, get_rooms/1,
          add_user/3, remove_user/3, get_users_list/2,
-         send_message/4,  get_messages_history/2]).
+         send_message/4,  get_messages_history/2, stop/1]).
 
+-record(room, {roomname = [], users = [], messages = []}).
 
 start() ->
-    ok.
+    Rooms = {},
+    spawn(?MODULE, loop, [Rooms]).
 
-
+% Pid - Server, RoomName - Item
 create_room(Server, RoomName) ->
-    ok.
+    call(Server, {create_room, RoomName}). 
 
 
 remove_room(Server, RoomId) ->
-    ok.
+    call(Server, {remove_room, RoomId}).
 
 
 get_rooms(Server) ->
-    ok.
+    call(Server, {get_rooms}).
 
 
 add_user(Server, RoomId, UserName) ->
-    ok.
+    call(Server, {add_user, RoomId, UserName}).
 
 
 remove_user(Server, RoomId, UserName) ->
-    ok.
+    call(Server, {remove_user, RoomId, UserName}).
 
 
 get_users_list(Server, RoomId) ->
-    ok.
+    call(Server, {get_users_list, RoomId}).
 
 
 send_message(Server, RoomId, UserName, Message) ->
-    ok.
+    call(Server, {send_message, RoomId, UserName, RoomId}).
+
+
+stop(Server) ->
+    Server ! stop.
 
 
 get_messages_history(Server, RoomId) ->
