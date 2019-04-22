@@ -25,7 +25,7 @@ test() ->
     ok.
 
 test_messages(TestName, Messages) ->
-    io:format("~n### ~ts~ntest_messages: ~p~n", [TestName, Messages]),
+    io:format("~n### ~t~ntest_messages: ~p~n", [TestName, Messages]),
     flush(),
     [self() ! Msg || Msg <- Messages],
 
